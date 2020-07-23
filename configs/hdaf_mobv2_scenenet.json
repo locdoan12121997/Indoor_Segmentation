@@ -1,0 +1,88 @@
+{
+  "exp": {
+    "name": "HDAF_mobilenetv2_scenenet_u2_f256",
+    "mixed_precision": false,
+    "jpa_optimization": true
+  },
+  "generator": {
+    "img_dir": "datasets/nyu_v2/train_rgb",
+    "mask_dir": "datasets/nyu_v2/train_mask",
+    "depth_dir": "datasets/nyu_v2/train_depth",
+    "use_data_augmentation": false,
+    "shuffle_seed": 9,
+    "img_mode": "color",
+    "is_scenenet": true,
+    "parts": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16"
+    ],
+    "img_step": 10
+  },
+  "hdaf": {
+    "s": 1,
+    "u": 2,
+    "v": 1,
+    "f": 256,
+    "use_depth": true
+  },
+  "model": {
+    "class_name": "models.hdaf_net.HdafNet",
+    "optimizer": {
+      "name": "SGD",
+      "momentum": 0.9
+    },
+    "lr": {
+      "policy": "polynomial",
+      "initial": 1e-1,
+      "maximal_learning_rate": 1e-4,
+      "step_size": 500,
+      "power": 0.9,
+      "cycle": false
+    },
+    "width": 320,
+    "height": 256,
+    "channels": 3,
+    "classes": 41,
+    "seg_loss": "focal_loss",
+    "alpha": 0.25,
+    "gamma": 2.0,
+    "depth_loss": "berHu",
+    "backbone_pretrain": "non",
+    "backbone": "mobilenet_v2",
+    "loss_weights": {
+      "main_segmentation": 1.0,
+      "main_depth": 1.0,
+      "deep_segmentation": 1.0,
+      "deep_depth": 1.0
+    }
+  },
+  "trainer": {
+    "num_epochs": 10,
+    "batch_size": 8,
+    "verbose_training": true,
+    "workers": 1
+  },
+  "callbacks": {
+    "checkpoint_monitor": "loss",
+    "checkpoint_mode": "min",
+    "checkpoint_save_best_only": true,
+    "checkpoint_save_weights_only": true,
+    "checkpoint_verbose": true,
+    "tensorboard_write_graph": true
+  }
+}
